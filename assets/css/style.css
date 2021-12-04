@@ -22,7 +22,7 @@ ul {
   list-style: none;
 }
 
-.cardsContainer {
+#cardsContainer {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
@@ -100,7 +100,8 @@ ul {
   margin-left: 10px;
 }
 
-.selectedActorsSection {
+#selectedActorsSection {
+  display: none;
   margin: 40px 10px 10px;
   padding: 20px;
   background-color: burlywood;
@@ -114,10 +115,6 @@ ul {
   text-transform: uppercase;
 }
 
-.selectedActorsContainer {
-  line-height: 180%;
-}
-
 .selectedItem {
   display: inline-block;
   margin: 5px;
@@ -128,4 +125,19 @@ ul {
 
 .selectedItem + .selectedItem {
   margin-left: 10px;
+}
+
+#ErrorSection {
+  display: none;
+  margin: 40px 10px 10px;
+  padding: 20px;
+  background-color: tomato;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.ErrorSectionHeading {
+  margin-bottom: 20px;
+  color: black;
+  text-transform: uppercase;
 }

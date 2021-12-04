@@ -17,81 +17,92 @@ function createElement(
 
 const rootCards = document.getElementById('cardsContainer');
 fetch('./data.json')
-  .then((promise) => promise.json())
+  .then((response) => response.json())
   .then((data) => {
-    data.forEach((user) => {
-      checkData(user);
-      let { id, firstName, lastName, profilePicture, contacts } = user;
-      firstName = checkName(firstName);
-      lastName = checkName(lastName);
-      const card = createElement(
-        'li',
-        {
-          attributes: { info: `${firstName} ${lastName}` },
-          classNames: ['cardWrapper'],
-          events: { click: selectorActors },
-        },
-        createElement(
-          'acticle',
-          { attributes: {}, classNames: ['cardContainer'], events: {} },
+    if (data.length === 0) {
+      showError('No data');
+    } else {
+      data.forEach((user) => {
+        checkData(user);
+        let { id, firstName, lastName, profilePicture, contacts } = user;
+        firstName = checkName(firstName);
+        lastName = checkName(lastName);
+        const card = createElement(
+          'li',
+          {
+            attributes: { info: `${firstName} ${lastName}` },
+            classNames: ['cardWrapper'],
+            events: { click: selectorActors },
+          },
           createElement(
-            'div',
-            { attributes: {}, classNames: ['cardImageWrapper'], events: {} },
+            'acticle',
+            { attributes: {}, classNames: ['cardContainer'], events: {} },
             createElement(
               'div',
-              {
-                attributes: {
-                  src: profilePicture,
-                  style: `background-color: ${stringToColour(
-                    firstName + ' ' + lastName
-                  )}`,
+              { attributes: {}, classNames: ['cardImageWrapper'], events: {} },
+              createElement(
+                'div',
+                {
+                  attributes: {
+                    src: profilePicture,
+                    style: `background-color: ${stringToColour(
+                      firstName + ' ' + lastName
+                    )}`,
+                  },
+                  classNames: ['initials'],
+                  events: {},
                 },
-                classNames: ['initials'],
+                getInitials(firstName, lastName),
+                createElement('img', {
+                  attributes: { src: profilePicture },
+                  classNames: ['cardImage'],
+                  events: { error: imgHandlerErrEvent },
+                })
+              )
+            ),
+            createElement(
+              'h2',
+              { attributes: {}, classNames: ['cardName'], events: {} },
+              `${firstName ? firstName : '?'} ${lastName ? lastName : '?'}`
+            ),
+            createElement(
+              'section',
+              {
+                attributes: {},
+                classNames: ['contactsWrapper'],
                 events: {},
               },
-              getInitials(firstName, lastName),
-              createElement('img', {
-                attributes: { src: profilePicture },
-                classNames: ['cardImage'],
-                events: { error: imgHandlerErrEvent },
-              })
-            )
-          ),
-          createElement(
-            'h2',
-            { attributes: {}, classNames: ['cardName'], events: {} },
-            `${firstName ? firstName : '?'} ${lastName ? lastName : '?'}`
-          ),
-          createElement(
-            'section',
-            {
-              attributes: {},
-              classNames: ['contactsWrapper'],
-              events: {},
-            },
-            ...contacts.map((link) =>
-              createElement(
-                'a',
-                {
-                  attributes: { target: '_blank', href: link },
-                  classNames: ['contactLink'],
-                },
-                createElement('img', {
-                  attributes: { src: contactsMap.get(new URL(link).host) },
-                  classNames: ['contactImage'],
-                  events: {},
-                })
+              ...contacts.map((link) =>
+                createElement(
+                  'a',
+                  {
+                    attributes: { target: '_blank', href: link },
+                    classNames: ['contactLink'],
+                  },
+                  createElement('img', {
+                    attributes: { src: contactsMap.get(new URL(link).host) },
+                    classNames: ['contactImage'],
+                    events: {},
+                  })
+                )
               )
             )
           )
-        )
-      );
-      rootCards.append(card);
-    });
+        );
+        rootCards.append(card);
+        document.getElementById('selectedActorsSection').style.display =
+          'block';
+      });
+    }
   })
   .catch((error) => {
-    console.log(error);
+    showError(error);
   });
+
+function showError(error) {
+  console.log(error);
+  document.getElementById('ErrorSection').style.display = 'block';
+}
 
 function checkName(name) {
   return name !== '' ? name : '?';
